@@ -1,0 +1,37 @@
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <label for="title">
+    <span>Task Title</span>
+    <input id="title" type="text" placeholder="Task title" formControlName="title" />
+  </label>
+  @if (taskForm.get('title')?.touched && taskForm.get('title')?.invalid) {
+    <div>
+      @if (taskForm.get('title')?.errors?.['required']) {
+        <span>Title is required</span>
+      }
+      @if (taskForm.get('title')?.errors?.['maxlength']) {
+        <span>Title must be no more than 255 characters</span>
+      }
+      @if (taskForm.get('title')?.errors?.['pattern']) {
+        <span>Title cannot be empty</span>
+      }
+    </div>
+  }
+
+  <label for="description">
+    <span>Task Description</span>
+    <textarea
+      id="description"
+      placeholder="Task description"
+      formControlName="description"
+    ></textarea>
+  </label>
+  @if (taskForm.get('description')?.touched && taskForm.get('description')?.invalid) {
+    <div>
+      @if (taskForm.get('description')?.errors?.['maxlength']) {
+        <span>Description must be no more than 1000 characters</span>
+      }
+    </div>
+  }
+
+  <button type="submit">Create task</button>
+</form>

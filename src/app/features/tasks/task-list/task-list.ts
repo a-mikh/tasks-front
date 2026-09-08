@@ -9,6 +9,7 @@ import { Task } from '../../../models/task';
 })
 export class TaskList implements OnInit {
   private readonly taskApiService = inject(TaskApiService);
+
   protected readonly tasks = signal<Task[]>([]);
 
   ngOnInit(): void {
