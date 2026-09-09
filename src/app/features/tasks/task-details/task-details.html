@@ -2,7 +2,12 @@
   <div>
     <h1>{{ task.title }} - {{ task.id }}</h1>
     <p>{{ task.description }}</p>
-    <p>{{ task.status }}</p>
+    <div>
+      <p>{{ task.status }}</p>
+      @if (canAdvanceStatus()) {
+        <button (click)="moveToNextStatus(task.id)">Next Status</button>
+      }
+    </div>
     <p>{{ task.assignee }}</p>
   </div>
 }

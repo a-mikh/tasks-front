@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TaskApiService } from '../../../services/task-api-service';
 import { Task } from '../../../models/task';
@@ -13,6 +13,10 @@ export class TaskDetails implements OnInit {
   private readonly tasksService = inject(TaskApiService);
 
   protected readonly task = signal<Task | null>(null);
+  protected readonly canAdvanceStatus = computed(() => {
+    const task = this.task();
+    return task !== null && task.status !== 'DONE';
+  });
 
   ngOnInit(): void {
     this.loadTaskDetails();
@@ -21,6 +25,16 @@ export class TaskDetails implements OnInit {
   private loadTaskDetails(): void {
     const taskId = Number(this.activatedRoute.snapshot.paramMap.get('taskId'));
     this.tasksService.getTaskById(taskId).subscribe((task) => {
+      this.task.set(task);
+    });
+  }
+
+  protected moveToNextStatus(taskId: number): void {
+    if (!this.canAdvanceStatus()) {
+      return;
+    }
+
+    this.tasksService.moveToNextStatus(taskId).subscribe((task) => {
       this.task.set(task);
     });
   }

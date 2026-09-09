@@ -23,4 +23,8 @@ export class TaskApiService {
   getTaskById(taskId: number): Observable<Task> {
     return this.httpClient.get<Task>(`${this.baseUrl}/${taskId}`);
   }
+
+  moveToNextStatus(taskId: number): Observable<Task> {
+    return this.httpClient.patch<Task>(`${this.baseUrl}/${taskId}/status/next`, null);
+  }
 }
