@@ -1,11 +1,16 @@
-@if (task(); as task) {
+@if (isLoading()) {
+  <p>Loading...</p>
+} @else if (errorMessage(); as error) {
+  <p>{{ error }}</p>
+  <button type="button" (click)="loadTaskDetails()">Retry</button>
+} @else if (task(); as task) {
   <div>
     <h1>{{ task.title }} - {{ task.id }}</h1>
     <p>{{ task.description }}</p>
     <div>
       <p>{{ task.status }}</p>
       @if (canAdvanceStatus()) {
-        <button (click)="moveToNextStatus(task.id)">Next Status</button>
+        <button type="button" (click)="moveToNextStatus(task.id)">Next Status</button>
       }
     </div>
     <p>{{ task.assignee }}</p>
