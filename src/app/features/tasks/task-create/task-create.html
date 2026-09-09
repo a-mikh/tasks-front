@@ -1,3 +1,8 @@
+@if (submitError(); as error) {
+  <div role="alert">
+    <span>{{ error }}</span>
+  </div>
+}
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
   <label for="title">
     <span>Task Title</span>
@@ -33,5 +38,7 @@
     </div>
   }
 
-  <button type="submit">Create task</button>
+  <button type="submit" [disabled]="isSubmitting()">
+    {{ isSubmitting() ? 'Creating task...' : 'Create task' }}
+  </button>
 </form>
