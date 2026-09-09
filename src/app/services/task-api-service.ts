@@ -19,4 +19,8 @@ export class TaskApiService {
   createTask(task: TaskCreateRequest): Observable<Task> {
     return this.httpClient.post<Task>(this.baseUrl, task);
   }
+
+  getTaskById(taskId: number): Observable<Task> {
+    return this.httpClient.get<Task>(`${this.baseUrl}/${taskId}`);
+  }
 }

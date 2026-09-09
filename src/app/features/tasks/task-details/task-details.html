@@ -1,0 +1,8 @@
+@if (task(); as task) {
+  <div>
+    <h1>{{ task.title }} - {{ task.id }}</h1>
+    <p>{{ task.description }}</p>
+    <p>{{ task.status }}</p>
+    <p>{{ task.assignee }}</p>
+  </div>
+}

@@ -2,7 +2,9 @@
 <ul>
   @for (task of tasks(); track task.id) {
     <li>
-      <h3>{{ task.title }}</h3>
+      <a [routerLink]="['/tasks', task.id]">
+        <h3>{{ task.title }}</h3>
+      </a>
       <p>{{ task.description }}</p>
       <p>{{ task.status }}</p>
       <p>{{ task.assignee }}</p>
