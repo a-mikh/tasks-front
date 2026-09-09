@@ -1,13 +1,23 @@
 <h1>Tasks</h1>
-<ul>
-  @for (task of tasks(); track task.id) {
-    <li>
-      <a [routerLink]="['/tasks', task.id]">
-        <h3>{{ task.title }}</h3>
-      </a>
-      <p>{{ task.description }}</p>
-      <p>{{ task.status }}</p>
-      <p>{{ task.assignee }}</p>
-    </li>
-  }
-</ul>
+
+@if (isLoading()) {
+  <p>Loading tasks...</p>
+} @else if (errorMessage(); as error) {
+  <p>{{ error }}</p>
+  <button (click)="loadTasks()">Retry</button>
+} @else if (tasks().length === 0) {
+  <p>No tasks found.</p>
+} @else {
+  <ul>
+    @for (task of tasks(); track task.id) {
+      <li>
+        <a [routerLink]="['/tasks', task.id]">
+          <h3>{{ task.title }}</h3>
+        </a>
+        <p>{{ task.description }}</p>
+        <p>{{ task.status }}</p>
+        <p>{{ task.assignee }}</p>
+      </li>
+    }
+  </ul>
+}
