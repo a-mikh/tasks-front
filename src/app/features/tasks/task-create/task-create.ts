@@ -4,6 +4,7 @@ import { TaskApiService } from '../../../services/task-api-service';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { isApiError } from '../../../models/api-error';
 
 @Component({
   selector: 'app-task-create',
@@ -41,8 +42,33 @@ export class TaskCreate {
         next: () => {
           this.router.navigate(['/']);
         },
-        error: (error: HttpErrorResponse) => {
-          this.submitError.set('Failed to create task.');
+        error: (httpError: HttpErrorResponse) => {
+          const body: unknown = httpError.error;
+
+          if (!isApiError(body)) {
+            this.submitError.set('Failed to create task.');
+            return;
+          }
+
+          const fieldEntries = Object.entries(body.fieldErrors);
+
+          if (body.code === 'VALIDATION_ERROR' && fieldEntries.length > 0) {
+            fieldEntries.forEach(([field, message]) => {
+              const control = this.taskForm.get(field);
+
+              if (control) {
+                control.setErrors({
+                  ...control.errors,
+                  backend: message,
+                });
+                control.markAsTouched();
+              }
+            });
+
+            return;
+          }
+
+          this.submitError.set(body.message);
         },
       });
   }

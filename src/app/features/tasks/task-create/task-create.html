@@ -21,6 +21,9 @@
       }
     </div>
   }
+  @if (taskForm.controls.title.errors?.['backend']; as backendError) {
+    <span>{{ backendError }}</span>
+  }
 
   <label for="description">
     <span>Task Description</span>
@@ -36,6 +39,9 @@
         <span>Description must be no more than 1000 characters</span>
       }
     </div>
+  }
+  @if (taskForm.controls.description.errors?.['backend']; as backendError) {
+    <span>{{ backendError }}</span>
   }
 
   <button type="submit" [disabled]="isSubmitting()">
