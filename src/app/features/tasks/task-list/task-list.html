@@ -1,4 +1,11 @@
 <h1>Tasks</h1>
+<label for="status-filter">Status</label>
+<select id="status-filter" [value]="filterStatus()" (change)="handleFilterChange($event)">
+  <option value="ALL">All</option>
+  <option value="TODO">To Do</option>
+  <option value="IN_PROGRESS">In Progress</option>
+  <option value="DONE">Done</option>
+</select>
 
 @if (isLoading()) {
   <p>Loading tasks...</p>
