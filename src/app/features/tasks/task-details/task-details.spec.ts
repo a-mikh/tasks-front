@@ -1,9 +1,10 @@
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { Task } from '../../../models/task';
 import { TaskApiService } from '../../../services/task-api-service';
 import { TestBed } from '@angular/core/testing';
 import { TaskDetails } from './task-details';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const doneTask: Task = {
   id: 42,
@@ -48,5 +49,37 @@ describe('TaskDetails', () => {
     expect(nativeElement.textContent).toContain('Finished task');
     expect(nativeElement.textContent).toContain('DONE');
     expect(nativeElement.textContent).not.toContain('Next Status');
+  });
+
+  it('should show an error message when status update fails', () => {
+    const todoTask: Task = {
+      ...doneTask,
+      status: 'TODO',
+    };
+
+    taskApiServiceMock.getTaskById.mockReturnValue(of(todoTask));
+    taskApiServiceMock.moveToNextStatus.mockReturnValue(
+      throwError(
+        () =>
+          new HttpErrorResponse({
+            status: 0,
+            statusText: 'Network error',
+          }),
+      ),
+    );
+
+    const fixture = TestBed.createComponent(TaskDetails);
+    fixture.detectChanges();
+
+    const nativeElement = fixture.nativeElement as HTMLElement;
+    const nextStatusButton = nativeElement.querySelector(
+      '.task-details-card__action',
+    ) as HTMLButtonElement;
+
+    nextStatusButton.click();
+    fixture.detectChanges();
+
+    expect(taskApiServiceMock.moveToNextStatus).toHaveBeenCalledWith(42);
+    expect(nativeElement.textContent).toContain('Failed to update task status.');
   });
 });

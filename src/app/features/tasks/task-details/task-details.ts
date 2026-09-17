@@ -4,6 +4,7 @@ import { TaskApiService } from '../../../services/task-api-service';
 import { Task } from '../../../models/task';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { isApiError } from '../../../models/api-error';
 
 @Component({
   selector: 'app-task-details',
@@ -58,8 +59,20 @@ export class TaskDetails implements OnInit {
     this.tasksService
       .moveToNextStatus(taskId)
       .pipe(finalize(() => this.isLoading.set(false)))
-      .subscribe((task) => {
-        this.task.set(task);
+      .subscribe({
+        next: (task) => {
+          this.task.set(task);
+        },
+        error: (httpError: HttpErrorResponse) => {
+          const body: unknown = httpError.error;
+
+          if (!isApiError(body)) {
+            this.errorMessage.set('Failed to update task status.');
+            return;
+          }
+
+          this.errorMessage.set(body.message);
+        },
       });
   }
 }
