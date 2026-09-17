@@ -1,30 +1,47 @@
-<h1>Tasks</h1>
-<label for="status-filter">Status</label>
-<select id="status-filter" [value]="filterStatus()" (change)="handleFilterChange($event)">
-  <option value="ALL">All</option>
-  <option value="TODO">To Do</option>
-  <option value="IN_PROGRESS">In Progress</option>
-  <option value="DONE">Done</option>
-</select>
+<section class="task-list-page" aria-labelledby="tasks-heading">
+  <h1 id="tasks-heading">Tasks</h1>
+  <p class="page-description">Keep track of your work and make progress.</p>
 
-@if (isLoading()) {
-  <p>Loading tasks...</p>
-} @else if (errorMessage(); as error) {
-  <p>{{ error }}</p>
-  <button (click)="loadTasks()">Retry</button>
-} @else if (tasks().length === 0) {
-  <p>No tasks found.</p>
-} @else {
-  <ul>
-    @for (task of tasks(); track task.id) {
-      <li>
-        <a [routerLink]="['/tasks', task.id]">
-          <h3>{{ task.title }}</h3>
-        </a>
-        <p>{{ task.description }}</p>
-        <p>{{ task.status }}</p>
-        <p>{{ task.assignee }}</p>
-      </li>
-    }
-  </ul>
-}
+  <div class="task-filter">
+    <label for="status-filter" class="task-filter__label">Status</label>
+    <select
+      class="task-filter__select"
+      id="status-filter"
+      [value]="filterStatus()"
+      (change)="handleFilterChange($event)"
+    >
+      <option value="ALL">All</option>
+      <option value="TODO">To Do</option>
+      <option value="IN_PROGRESS">In Progress</option>
+      <option value="DONE">Done</option>
+    </select>
+  </div>
+
+  @if (isLoading()) {
+    <p class="state-message" role="status">Loading tasks...</p>
+  } @else if (errorMessage(); as error) {
+    <div class="state-message state-message--error" role="alert">
+      <p>{{ error }}</p>
+      <button type="button" class="secondary-action" (click)="loadTasks()">Retry</button>
+    </div>
+  } @else if (tasks().length === 0) {
+    <p class="state-message state-message--empty">No tasks found.</p>
+  } @else {
+    <ul class="task-list">
+      @for (task of tasks(); track task.id) {
+        <li class="task-card">
+          <a class="task-card__link" [routerLink]="['/tasks', task.id]">
+            <h2 class="task-card__title">{{ task.title }}</h2>
+          </a>
+          <p class="task-card__description">{{ task.description ?? 'No description' }}</p>
+          <div class="task-card__meta">
+            <span class="status-badge" [attr.data-status]="task.status">
+              {{ task.status }}
+            </span>
+            <span class="task-card__assignee">Assignee: {{ task.assignee ?? 'Unassigned' }}</span>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</section>

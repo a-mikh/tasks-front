@@ -16,10 +16,14 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should render application brand link', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
+
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Task Manager');
+    const brand = compiled.querySelector('.app-brand');
+
+    expect(brand?.textContent).toContain('Task Manager');
+    expect(brand?.getAttribute('href')).toBe('/');
   });
 });
