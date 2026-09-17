@@ -1,18 +1,42 @@
-@if (isLoading()) {
-  <p>Loading...</p>
-} @else if (errorMessage(); as error) {
-  <p>{{ error }}</p>
-  <button type="button" (click)="loadTaskDetails()">Retry</button>
-} @else if (task(); as task) {
-  <div>
-    <h1>{{ task.title }} - {{ task.id }}</h1>
-    <p>{{ task.description }}</p>
-    <div>
-      <p>{{ task.status }}</p>
-      @if (canAdvanceStatus()) {
-        <button type="button" (click)="moveToNextStatus(task.id)">Next Status</button>
-      }
+<section class="task-details-page" aria-label="Task details" [attr.aria-busy]="isLoading()">
+  @if (isLoading()) {
+    <p class="state-message" role="status">Loading...</p>
+  } @else if (errorMessage(); as error) {
+    <div class="state-message state-message--error" role="alert">
+      <p>{{ error }}</p>
+      <button class="secondary-action" type="button" (click)="loadTaskDetails()">Retry</button>
     </div>
-    <p>{{ task.assignee }}</p>
-  </div>
-}
+  } @else if (task(); as task) {
+    <article class="task-details-card">
+      <header class="task-details-card__header">
+        <h1 class="task-details-card__title">{{ task.title }}</h1>
+        <span class="task-details-card__id">#{{ task.id }}</span>
+      </header>
+      <section class="task-details-card__section">
+        <h2 class="task-details-card__section-title">Description</h2>
+        <p class="task-details-card__description">{{ task.description ?? 'No description' }}</p>
+      </section>
+      <dl class="task-details-card__meta">
+        <div class="task-details-card__meta-row">
+          <dt>Status</dt>
+          <dd>
+            <span class="status-badge" [attr.data-status]="task.status">{{ task.status }}</span>
+          </dd>
+        </div>
+        <div class="task-details-card__meta-row">
+          <dt>Assignee</dt>
+          <dd>{{ task.assignee ?? 'Unassigned' }}</dd>
+        </div>
+      </dl>
+      @if (canAdvanceStatus()) {
+        <button
+          class="primary-action task-details-card__action"
+          type="button"
+          (click)="moveToNextStatus(task.id)"
+        >
+          Next Status
+        </button>
+      }
+    </article>
+  }
+</section>
