@@ -28,7 +28,20 @@ export class TaskDetails implements OnInit {
   }
 
   protected loadTaskDetails(): void {
-    const taskId = Number(this.activatedRoute.snapshot.paramMap.get('taskId'));
+    const taskIdParam = this.activatedRoute.snapshot.paramMap.get('taskId');
+
+    if (taskIdParam === null) {
+      this.errorMessage.set('Invalid task id.');
+      return;
+    }
+
+    const taskId = Number(taskIdParam);
+
+    if (!Number.isSafeInteger(taskId) || taskId <= 0) {
+      this.errorMessage.set('Invalid task id.');
+      return;
+    }
+
     this.isLoading.set(true);
     this.errorMessage.set(null);
 

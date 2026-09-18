@@ -19,15 +19,27 @@ const taskApiServiceMock = {
   moveToNextStatus: vi.fn(),
 };
 
+let routeTaskId: string | null;
+
 beforeEach(() => {
   vi.clearAllMocks();
   taskApiServiceMock.getTaskById.mockReturnValue(of(doneTask));
+  routeTaskId = '42';
 
   TestBed.configureTestingModule({
     imports: [TaskDetails],
     providers: [
       { provide: TaskApiService, useValue: taskApiServiceMock },
-      { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '42' } } } },
+      {
+        provide: ActivatedRoute,
+        useValue: {
+          snapshot: {
+            paramMap: {
+              get: () => routeTaskId,
+            },
+          },
+        },
+      },
     ],
   });
 });
@@ -81,5 +93,18 @@ describe('TaskDetails', () => {
 
     expect(taskApiServiceMock.moveToNextStatus).toHaveBeenCalledWith(42);
     expect(nativeElement.textContent).toContain('Failed to update task status.');
+  });
+
+  it('should not request a task when route id is invalid', () => {
+    routeTaskId = 'abc';
+
+    const fixture = TestBed.createComponent(TaskDetails);
+    fixture.detectChanges();
+
+    expect(taskApiServiceMock.getTaskById).not.toHaveBeenCalled();
+
+    const nativeElement = fixture.nativeElement as HTMLElement;
+
+    expect(nativeElement.textContent).toContain('Invalid task id.');
   });
 });
