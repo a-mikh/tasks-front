@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
-import { TaskApiService } from '../../../services/task-api-service';
+import { TaskApiService } from '../../../services/task-api.service';
 import { Task } from '../../../models/task';
 import { RouterLink } from '@angular/router';
 import { EMPTY, Observable, Subject, catchError, finalize, switchMap, tap } from 'rxjs';

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { TaskApiService } from '../../../services/task-api-service';
-import { TaskList } from './task-list';
+import { TaskApiService } from '../../../services/task-api.service';
+import { TaskList } from './task-list.component';
 import { of, Subject } from 'rxjs';
 import { PageResponse } from '../../../models/page-response';
 import { Task } from '../../../models/task';

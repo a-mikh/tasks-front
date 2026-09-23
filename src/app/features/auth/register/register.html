@@ -1,0 +1,85 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="isSubmitting()">
+  <div class="form-field">
+    <label for="username" class="form-field__label">
+      <span>Username<span class="required-marker" aria-hidden="true">*</span></span>
+    </label>
+    <input
+      id="username"
+      class="form-field__control"
+      type="text"
+      placeholder="Username"
+      formControlName="username"
+      aria-required="true"
+      [attr.aria-invalid]="
+        registerForm.controls.username.touched && registerForm.controls.username.invalid
+      "
+      [attr.aria-describedby]="
+        registerForm.controls.username.touched && registerForm.controls.username.invalid
+          ? 'username-errors'
+          : null
+      "
+    />
+
+    @if (registerForm.get('username')?.touched && registerForm.get('username')?.invalid) {
+      <div id="username-errors" class="field-error" role="alert">
+        <div>
+          @if (registerForm.get('username')?.errors?.['required']) {
+            <span>Username is required</span>
+          }
+          @if (registerForm.get('username')?.errors?.['maxlength']) {
+            <span>Username must be no more than 50 characters</span>
+          }
+          @if (registerForm.get('username')?.errors?.['pattern']) {
+            <span>Username may contain only letters, digits, '.', '_' and '-'</span>
+          }
+          @if (registerForm.get('username')?.errors?.['minlength']) {
+            <span>Username must contain at least 3 characters</span>
+          }
+        </div>
+
+        @if (registerForm.controls.username.errors?.['backend']; as backendError) {
+          <span>{{ backendError }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="password" class="form-field__label">
+      <span>Password<span class="required-marker" aria-hidden="true">*</span></span>
+    </label>
+    <input
+      id="password"
+      class="form-field__control"
+      type="password"
+      placeholder="Password"
+      formControlName="password"
+      [attr.aria-invalid]="
+        registerForm.controls.password.touched && registerForm.controls.password.invalid
+      "
+      [attr.aria-describedby]="
+        registerForm.controls.password.touched && registerForm.controls.password.invalid
+          ? 'password-errors'
+          : null
+      "
+    />
+
+    @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+      <div id="password-errors" class="field-error" role="alert">
+        @if (registerForm.get('password')?.errors?.['required']) {
+          <span>Password is required</span>
+        }
+        @if (registerForm.controls.password.errors?.['backend']; as backendError) {
+          <span>{{ backendError }}</span>
+        }
+        @if (registerForm.get('password')?.errors?.['minlength']) {
+          <span>Password must be at least 8 symbols long</span>
+        }
+      </div>
+    }
+  </div>
+
+  <button class="primary-action task-form__submit" type="submit" [disabled]="isSubmitting()">
+    Sign Up
+  </button>
+</form>
