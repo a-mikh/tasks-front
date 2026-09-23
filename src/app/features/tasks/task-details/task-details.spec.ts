@@ -1,8 +1,8 @@
 import { of, throwError } from 'rxjs';
 import { Task } from '../../../models/task';
-import { TaskApiService } from '../../../services/task-api-service';
+import { TaskApiService } from '../../../services/task-api.service';
 import { TestBed } from '@angular/core/testing';
-import { TaskDetails } from './task-details';
+import { TaskDetailsComponent } from './task-details.component';
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -27,7 +27,7 @@ beforeEach(() => {
   routeTaskId = '42';
 
   TestBed.configureTestingModule({
-    imports: [TaskDetails],
+    imports: [TaskDetailsComponent],
     providers: [
       { provide: TaskApiService, useValue: taskApiServiceMock },
       {
@@ -46,13 +46,13 @@ beforeEach(() => {
 
 describe('TaskDetails', () => {
   it('should create the component', () => {
-    const fixture = TestBed.createComponent(TaskDetails);
+    const fixture = TestBed.createComponent(TaskDetailsComponent);
     const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 
   it('should hide next status action for a completed task', () => {
-    const fixture = TestBed.createComponent(TaskDetails);
+    const fixture = TestBed.createComponent(TaskDetailsComponent);
     fixture.detectChanges();
 
     expect(taskApiServiceMock.getTaskById).toHaveBeenCalledWith(42);
@@ -80,7 +80,7 @@ describe('TaskDetails', () => {
       ),
     );
 
-    const fixture = TestBed.createComponent(TaskDetails);
+    const fixture = TestBed.createComponent(TaskDetailsComponent);
     fixture.detectChanges();
 
     const nativeElement = fixture.nativeElement as HTMLElement;
@@ -98,7 +98,7 @@ describe('TaskDetails', () => {
   it('should not request a task when route id is invalid', () => {
     routeTaskId = 'abc';
 
-    const fixture = TestBed.createComponent(TaskDetails);
+    const fixture = TestBed.createComponent(TaskDetailsComponent);
     fixture.detectChanges();
 
     expect(taskApiServiceMock.getTaskById).not.toHaveBeenCalled();

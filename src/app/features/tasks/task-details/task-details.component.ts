@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TaskApiService } from '../../../services/task-api-service';
+import { TaskApiService } from '../../../services/task-api.service';
 import { Task } from '../../../models/task';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -11,7 +11,7 @@ import { isApiError } from '../../../models/api-error';
   templateUrl: './task-details.html',
   styleUrl: './task-details.scss',
 })
-export class TaskDetails implements OnInit {
+export class TaskDetailsComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly tasksService = inject(TaskApiService);
 
