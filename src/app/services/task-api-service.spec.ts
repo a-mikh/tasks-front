@@ -37,22 +37,28 @@ describe('TaskApiService', () => {
           assignee: 'John Doe',
         },
       ],
-      page: 0,
-      size: 10,
+      page: 2,
+      size: 6,
       totalElements: 1,
       totalPages: 1,
       first: true,
       last: true,
     };
+    const requestedPage = 2;
+    const requestedSize = 6;
 
-    service.getTasks('TODO').subscribe((response) => {
+    service.getTasks('TODO', requestedPage, requestedSize).subscribe((response) => {
       expect(response).toEqual(page);
+      expect(response.page).toEqual(requestedPage);
+      expect(response.size).toEqual(requestedSize);
     });
 
     const request = httpTestingController.expectOne((request) => request.url === '/tasks');
 
     expect(request.request.method).toBe('GET');
     expect(request.request.params.get('status')).toBe('TODO');
+    expect(request.request.params.get('page')).toBe(String(requestedPage));
+    expect(request.request.params.get('size')).toBe(String(requestedSize));
 
     request.flush(page);
   });
@@ -83,21 +89,27 @@ describe('TaskApiService', () => {
         },
       ],
       page: 0,
-      size: 10,
+      size: 20,
       totalElements: 3,
       totalPages: 1,
       first: true,
       last: true,
     };
+    const defaultPage = 0;
+    const defaultSize = 20;
 
     service.getTasks().subscribe((response) => {
       expect(response).toEqual(page);
+      expect(response.page).toEqual(defaultPage);
+      expect(response.size).toEqual(defaultSize);
     });
 
     const request = httpTestingController.expectOne((request) => request.url === '/tasks');
 
     expect(request.request.method).toBe('GET');
     expect(request.request.params.has('status')).toBe(false);
+    expect(request.request.params.get('page')).toBe(String(defaultPage));
+    expect(request.request.params.get('size')).toBe(String(defaultSize));
 
     request.flush(page);
   });

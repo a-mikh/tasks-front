@@ -13,8 +13,9 @@ export class TaskApiService {
   private readonly baseUrl = '/tasks';
   private readonly httpClient = inject(HttpClient);
 
-  getTasks(status?: TaskStatus): Observable<PageResponse<Task>> {
-    let params = new HttpParams();
+  getTasks(status?: TaskStatus, page = 0, size = 20): Observable<PageResponse<Task>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+
     if (status) {
       params = params.set('status', status);
     }

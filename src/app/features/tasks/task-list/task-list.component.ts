@@ -24,6 +24,9 @@ export class TaskList implements OnInit {
   protected readonly isLoading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly filterStatus = signal<TaskStatusFilter>('ALL');
+  protected readonly currentPage = signal(0);
+  protected readonly pageSize = signal(10);
+  protected readonly totalPages = signal(0);
 
   ngOnInit(): void {
     this.loadRequests$
@@ -49,8 +52,12 @@ export class TaskList implements OnInit {
     const filter = this.filterStatus();
     const status = filter === 'ALL' ? undefined : filter;
 
-    return this.taskApiService.getTasks(status).pipe(
-      tap((tasks) => this.tasks.set(tasks.content)),
+    return this.taskApiService.getTasks(status, this.currentPage(), this.pageSize()).pipe(
+      tap((response) => {
+        this.tasks.set(response.content);
+        this.currentPage.set(response.page);
+        this.totalPages.set(response.totalPages);
+      }),
       catchError(() => {
         this.errorMessage.set('Failed to load tasks.');
         return EMPTY;
@@ -62,6 +69,21 @@ export class TaskList implements OnInit {
   protected handleFilterChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     this.filterStatus.set(target.value as TaskStatusFilter);
+    this.currentPage.set(0);
     this.loadTasks();
+  }
+
+  protected previousPage(): void {
+    if (this.currentPage() > 0) {
+      this.currentPage.set(this.currentPage() - 1);
+      this.loadTasks();
+    }
+  }
+
+  protected nextPage(): void {
+    if (this.currentPage() < this.totalPages() - 1) {
+      this.currentPage.set(this.currentPage() + 1);
+      this.loadTasks();
+    }
   }
 }
