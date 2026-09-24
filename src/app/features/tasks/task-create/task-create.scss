@@ -29,64 +29,6 @@
   box-shadow: var(--shadow-card);
 }
 
-.form-field {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.form-field__label {
-  font-weight: 700;
-}
-
-.required-marker {
-  margin-left: 0.2rem;
-  color: var(--color-danger);
-}
-
-.form-field__control {
-  width: 100%;
-  min-height: 2.875rem;
-  padding: 0.6875rem 0.75rem;
-  border: 0.0625rem solid var(--color-border-strong);
-  border-radius: var(--radius-small);
-  background: var(--color-surface);
-  color: var(--color-text);
-  transition:
-    border-color 150ms ease,
-    box-shadow 150ms ease;
-}
-
-.form-field__control::placeholder {
-  color: #8a98ab;
-}
-
-.form-field__control:hover {
-  border-color: #8fa2bb;
-}
-
-.form-field__control:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 0.1875rem rgb(23 105 224 / 12%);
-}
-
-.form-field__control[aria-invalid='true'] {
-  border-color: var(--color-danger);
-}
-
-textarea.form-field__control {
-  min-height: 8rem;
-  resize: vertical;
-}
-
-.field-error {
-  color: var(--color-danger);
-  font-size: 0.875rem;
-}
-
-.field-error span {
-  display: block;
-}
-
 .task-form__submit {
   justify-self: start;
   min-width: 9rem;

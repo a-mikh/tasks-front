@@ -23,7 +23,10 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
     catchError((error: unknown) => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
         authStateService.clearAccessToken();
-        void router.navigate(['/login']);
+        void router.navigate(['/login'], {
+          queryParams: { reason: 'session-expired' },
+          replaceUrl: true,
+        });
       }
 
       return throwError(() => error);
