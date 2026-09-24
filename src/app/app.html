@@ -1,8 +1,16 @@
 <header class="app-header">
   <div class="app-header__inner">
     <a routerLink="/" class="app-brand">Task Manager</a>
-    <nav aria-label="Primary navigation">
-      <a routerLink="/tasks/new" class="primary-action">New task</a>
+    <nav class="app-navigation" aria-label="Primary navigation">
+      @if (isAuthenticated()) {
+        <a routerLink="/tasks/new" class="primary-action">New task</a>
+        <button id="logout_button" type="button" class="secondary-action" (click)="onLogout()">
+          Log Out
+        </button>
+      } @else {
+        <a routerLink="/login" class="secondary-action">Log In</a>
+        <a routerLink="/register" class="primary-action">Sign Up</a>
+      }
     </nav>
   </div>
 </header>

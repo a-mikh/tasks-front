@@ -2,14 +2,15 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthApiService } from '../../../services/auth-api.service';
 import { finalize } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { isApiError } from '../../../models/api-error';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   selector: 'app-register',
   templateUrl: './register.html',
+  styleUrl: '../auth.scss',
 })
 export class RegisterComponent {
   private readonly authApiService = inject(AuthApiService);
@@ -47,7 +48,9 @@ export class RegisterComponent {
       .pipe(finalize(() => this.isSubmitting.set(false)))
       .subscribe({
         next: () => {
-          this.router.navigate(['/login']);
+          void this.router.navigate(['/login'], {
+            queryParams: { registered: true },
+          });
         },
         error: (httpError: HttpErrorResponse) => {
           const body: unknown = httpError.error;

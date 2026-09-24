@@ -1,22 +1,24 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthApiService } from '../../../services/auth-api.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { isApiError } from '../../../models/api-error';
 import { AuthStateService } from '../../../services/auth-state.service';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   selector: 'app-login',
   templateUrl: './login.html',
+  styleUrl: '../auth.scss',
 })
 export class LoginComponent {
   private readonly authApiService = inject(AuthApiService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authStateService = inject(AuthStateService);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
   protected readonly loginForm = this.formBuilder.nonNullable.group({
     username: ['', [Validators.required, Validators.pattern(/\S/)]],
@@ -24,6 +26,12 @@ export class LoginComponent {
   });
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
+  protected readonly registrationSucceeded = signal(
+    this.activatedRoute.snapshot.queryParamMap.get('registered') === 'true',
+  );
+  protected readonly sessionExpired = signal(
+    this.activatedRoute.snapshot.queryParamMap.get('reason') === 'session-expired',
+  );
 
   protected onSubmit(): void {
     if (this.loginForm.invalid || this.isSubmitting()) {
@@ -32,6 +40,8 @@ export class LoginComponent {
       }
       return;
     }
+    this.registrationSucceeded.set(false);
+    this.sessionExpired.set(false);
     this.isSubmitting.set(true);
     this.submitError.set(null);
 

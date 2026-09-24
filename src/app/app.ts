@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { AuthStateService } from './services/auth-state.service';
 
 @Component({
   imports: [RouterOutlet, RouterLink],
@@ -7,4 +8,14 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
-export class App {}
+export class App {
+  private readonly authStateService = inject(AuthStateService);
+  private readonly router = inject(Router);
+
+  protected readonly isAuthenticated = this.authStateService.isAuthenticated;
+
+  protected onLogout(): void {
+    this.authStateService.clearAccessToken();
+    void this.router.navigate(['/login']);
+  }
+}
