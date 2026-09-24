@@ -91,6 +91,50 @@
   font-size: 0.875rem;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.pagination__button {
+  min-width: 6.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 1rem;
+  border: 0.0625rem solid var(--color-border-strong);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.pagination__button:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+}
+
+.pagination__button:disabled {
+  background: var(--color-page);
+  color: var(--color-text-muted);
+  opacity: 0.65;
+}
+
+.pagination__status {
+  min-width: 7.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+
 @media (max-width: 37.5rem) {
   .task-filter {
     align-items: stretch;
@@ -108,5 +152,19 @@
   .task-card__meta {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .pagination {
+    gap: 0.5rem;
+  }
+
+  .pagination__button {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .pagination__status {
+    min-width: auto;
+    font-size: 0.8125rem;
   }
 }

@@ -44,4 +44,27 @@
       }
     </ul>
   }
+  @if (totalPages() > 1) {
+    <nav class="pagination" aria-label="Task pagination">
+      <button
+        class="pagination__button"
+        id="pagination_previous_button"
+        type="button"
+        (click)="previousPage()"
+        [disabled]="currentPage() === 0 || isLoading()"
+      >
+        Previous
+      </button>
+      <span class="pagination__status">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+      <button
+        class="pagination__button"
+        id="pagination_next_button"
+        type="button"
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages() - 1 || isLoading()"
+      >
+        Next
+      </button>
+    </nav>
+  }
 </section>

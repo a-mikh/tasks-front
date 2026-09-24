@@ -56,6 +56,42 @@ const donePage: PageResponse<Task> = {
   last: true,
 };
 
+const firstPage: PageResponse<Task> = {
+  content: [
+    {
+      id: 1,
+      title: 'First page task',
+      description: null,
+      status: 'TODO',
+      assignee: null,
+    },
+  ],
+  page: 0,
+  size: 1,
+  totalElements: 2,
+  totalPages: 2,
+  first: true,
+  last: false,
+};
+
+const secondPage: PageResponse<Task> = {
+  content: [
+    {
+      id: 2,
+      title: 'Second page task',
+      description: null,
+      status: 'TODO',
+      assignee: null,
+    },
+  ],
+  page: 1,
+  size: 1,
+  totalElements: 2,
+  totalPages: 2,
+  first: false,
+  last: true,
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
   TestBed.configureTestingModule({
@@ -97,5 +133,43 @@ describe('TaskList', () => {
 
     expect(nativeElement.textContent).toContain('Latest DONE result');
     expect(nativeElement.textContent).not.toContain('Old TODO result');
+  });
+
+  it('should move to the next and previous page', () => {
+    taskApiServiceMock.getTasks
+      .mockReturnValueOnce(of(firstPage))
+      .mockReturnValueOnce(of(secondPage))
+      .mockReturnValueOnce(of(firstPage));
+
+    const fixture = TestBed.createComponent(TaskList);
+    fixture.detectChanges();
+
+    const nativeElement = fixture.nativeElement as HTMLElement;
+    const nextButton = nativeElement.querySelector('#pagination_next_button') as HTMLButtonElement;
+    const previousButton = nativeElement.querySelector(
+      '#pagination_previous_button',
+    ) as HTMLButtonElement;
+
+    nextButton.click();
+    fixture.detectChanges();
+    expect(taskApiServiceMock.getTasks).toHaveBeenLastCalledWith(undefined, 1, 10);
+    expect(nativeElement.textContent).toContain('Second page task');
+    expect(nativeElement.textContent).toContain('Page 2 of 2');
+    expect(previousButton.disabled).toBe(false);
+    const updatedNextButton = nativeElement.querySelector(
+      '#pagination_next_button',
+    ) as HTMLButtonElement;
+    expect(updatedNextButton.disabled).toBe(true);
+
+    previousButton.click();
+    fixture.detectChanges();
+    expect(taskApiServiceMock.getTasks).toHaveBeenLastCalledWith(undefined, 0, 10);
+    expect(nativeElement.textContent).toContain('First page task');
+    expect(nativeElement.textContent).toContain('Page 1 of 2');
+    expect(nextButton.disabled).toBe(false);
+    const updatedPreviousButton = nativeElement.querySelector(
+      '#pagination_previous_button',
+    ) as HTMLButtonElement;
+    expect(updatedPreviousButton.disabled).toBe(true);
   });
 });
